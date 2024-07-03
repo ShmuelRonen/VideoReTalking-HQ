@@ -250,7 +250,11 @@ def main():
             # Full face enhancement by GFPGAN
             cropped_faces, restored_faces, restored_img = restorer.enhance(
                 ff, has_aligned=False, only_center_face=False, paste_back=True)
-
+                
+            # Blend the restored image with the original to reduce GFPGAN influence
+            blend_factor = 0.85  # Adjust this value between 0 and 1
+            blended_img = cv2.addWeighted(ff, 1 - blend_factor, restored_img, blend_factor, 0)
+    
             height, width = ff.shape[:2]
             pp = np.uint8(np.clip(restored_img, 0, 255))
 
